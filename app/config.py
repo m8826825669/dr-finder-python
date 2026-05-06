@@ -9,8 +9,8 @@ class Settings(BaseSettings):
     DEBUG: bool = False
 
     # Database (PostgreSQL)
-    DATABASE_URL: str = "postgresql+asyncpg://postgres:password@localhost:5432/doctorfinder"
-    DATABASE_URL_SYNC: str = "postgresql://postgres:password@localhost:5432/doctorfinder"
+    DATABASE_URL: str = "postgresql+asyncpg://postgres:12345678@localhost:5432/doctorfinder"
+    DATABASE_URL_SYNC: str = "postgresql://postgres:12345678@localhost:5432/doctorfinder"
 
     # Redis
     REDIS_URL: str = "redis://localhost:6379/0"
