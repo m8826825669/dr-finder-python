@@ -1,0 +1,20 @@
+
+# Environment files (contain secrets)
+.env
+.env.local
+.env.*.local
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# Local backup files
+*.bak
+
+# Alembic local cache
+migrations/__pycache__/
+
+# Editor/OS
+.DS_Store
+*.swp
