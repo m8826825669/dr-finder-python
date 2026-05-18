@@ -290,6 +290,23 @@ async def create_doctor_profile(
     return detail
 
 
+@router.get("/profile/me", response_model=Optional[DoctorDetail])
+async def get_my_doctor_profile(
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_doctor),
+):
+    """Return the authenticated doctor's own profile, or null if not yet created."""
+    result = await db.execute(
+        select(DoctorProfile)
+        .options(selectinload(DoctorProfile.user), selectinload(DoctorProfile.specialization))
+        .where(DoctorProfile.user_id == current_user.id)
+    )
+    doctor = result.scalar_one_or_none()
+    if not doctor:
+        return None
+    return _doctor_to_detail(doctor)
+
+
 @router.get("/{doctor_id}", response_model=DoctorDetail)
 async def get_doctor(doctor_id: int, db: AsyncSession = Depends(get_db)):
     """Get doctor profile by ID."""

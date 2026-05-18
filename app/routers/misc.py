@@ -69,8 +69,19 @@ async def get_stats(
     _: User = Depends(get_current_admin),
 ):
     """Platform-level statistics."""
+    from app.models import UserRole
+
     total_users = (await db.execute(select(func.count(User.id)))).scalar()
     total_doctors = (await db.execute(select(func.count(DoctorProfile.id)))).scalar()
+    total_patients = (await db.execute(
+        select(func.count(User.id)).where(User.role == UserRole.PATIENT)
+    )).scalar()
+    verified_doctors = (await db.execute(
+        select(func.count(DoctorProfile.id)).where(DoctorProfile.is_verified == True)
+    )).scalar()
+    pending_verification = (await db.execute(
+        select(func.count(DoctorProfile.id)).where(DoctorProfile.is_verified == False)
+    )).scalar()
     total_appts = (await db.execute(select(func.count(Appointment.id)))).scalar()
     completed = (await db.execute(
         select(func.count(Appointment.id)).where(Appointment.status == AppointmentStatus.COMPLETED)
@@ -82,6 +93,9 @@ async def get_stats(
     return {
         "total_users": total_users,
         "total_doctors": total_doctors,
+        "total_patients": total_patients,
+        "verified_doctors": verified_doctors,
+        "pending_verification": pending_verification,
         "total_appointments": total_appts,
         "completed_appointments": completed,
         "pending_appointments": pending,
